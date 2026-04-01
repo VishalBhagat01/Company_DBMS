@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Plus, Check, X, Filter, AlertTriangle, User, Package } from 'lucide-react';
+import { Plus, Check, X, Filter, AlertTriangle, User, Package, Search } from 'lucide-react';
 
 function Defects() {
   const [defects, setDefects] = useState([]);
@@ -8,6 +8,7 @@ function Defects() {
   const [loading, setLoading] = useState(true);
   const [showForm, setShowForm] = useState(false);
   const [filterStatus, setFilterStatus] = useState('');
+  const [searchTerm, setSearchTerm] = useState('');
   const [formData, setFormData] = useState({ 
     product_id: '', description: '', handled_by_employee_id: '' 
   });
@@ -58,6 +59,12 @@ function Defects() {
     })
     .then(() => fetchData());
   };
+
+  const filteredDefects = defects.filter(d => 
+    d.description.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    (d.product_type && d.product_type.toLowerCase().includes(searchTerm.toLowerCase())) ||
+    d.defect_id.toString().includes(searchTerm)
+  );
 
   return (
     <div className="animate-fade-in">
@@ -130,6 +137,18 @@ function Defects() {
       )}
 
       <div className="glass section-card table-container">
+        <div className="table-controls">
+          <div className="search-pill">
+            <Search size={16} />
+            <input 
+              type="text" 
+              placeholder="Search by product, description or ID..." 
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+            />
+          </div>
+        </div>
+
         {loading ? <div className="loading text-center py-8">Auditing defect database...</div> : (
           <table>
             <thead>
@@ -143,7 +162,7 @@ function Defects() {
               </tr>
             </thead>
             <tbody>
-              {defects.map(d => (
+              {filteredDefects.map(d => (
                 <tr key={d.defect_id}>
                   <td className="text-secondary font-medium">{new Date(d.defect_date).toLocaleDateString()}</td>
                   <td>
@@ -203,7 +222,6 @@ function Defects() {
           cursor: pointer;
         }
         .workflow-selector option {
-          background-color: #0f172a;
           color: white;
           padding: 8px;
         }
@@ -212,6 +230,12 @@ function Defects() {
         .input-with-icon { position: relative; width: 100%; }
         .input-icon { position: absolute; left: 14px; top: 50%; transform: translateY(-50%); color: var(--text-secondary); opacity: 0.5; }
         .input-with-icon select { padding-left: 44px; }
+
+        .table-controls { display: flex; gap: 16px; margin-bottom: 24px; }
+        .search-pill { display: flex; align-items: center; gap: 10px; background: rgba(15, 23, 42, 0.4); border: 1px solid var(--border-color); padding: 8px 16px; border-radius: 12px; color: var(--text-secondary); }
+        .search-pill input { background: none; border: none; padding: 0; font-size: 0.8125rem; color: white; width: 100%; }
+        .search-pill input:focus { outline: none; }
+
         .close-btn { width: 32px; height: 32px; border-radius: 8px; background: rgba(255, 255, 255, 0.03); color: var(--text-secondary); }
         .close-btn:hover { background: var(--error); color: white; }
       `}} />

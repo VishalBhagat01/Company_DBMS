@@ -5,6 +5,7 @@ function Customers() {
   const [customers, setCustomers] = useState([]);
   const [loading, setLoading] = useState(true);
   const [showForm, setShowForm] = useState(false);
+  const [searchTerm, setSearchTerm] = useState('');
   const [formData, setFormData] = useState({ name: '', address: '', contact: '' });
   const [editingId, setEditingId] = useState(null);
 
@@ -56,6 +57,12 @@ function Customers() {
         .then(() => fetchCustomers());
     }
   };
+
+  const filteredCustomers = customers.filter(cust => 
+    cust.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    (cust.address && cust.address.toLowerCase().includes(searchTerm.toLowerCase())) ||
+    cust.customer_id.toString().includes(searchTerm)
+  );
 
   return (
     <div className="animate-fade-in">
@@ -113,7 +120,12 @@ function Customers() {
         <div className="table-controls">
           <div className="search-pill">
             <Search size={16} />
-            <input type="text" placeholder="Search clients..." />
+            <input 
+              type="text" 
+              placeholder="Search clients by name or address..." 
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+            />
           </div>
         </div>
 
@@ -129,7 +141,7 @@ function Customers() {
               </tr>
             </thead>
             <tbody>
-              {customers.map(cust => (
+              {filteredCustomers.map(cust => (
                 <tr key={cust.customer_id}>
                   <td><span className="id-pill">#{cust.customer_id}</span></td>
                   <td><span className="font-bold text-primary">{cust.name}</span></td>
@@ -166,6 +178,11 @@ function Customers() {
         .input-icon { position: absolute; left: 14px; top: 50%; transform: translateY(-50%); color: var(--text-secondary); opacity: 0.5; }
         .input-with-icon input { padding-left: 40px; }
         
+        .table-controls { display: flex; gap: 16px; margin-bottom: 24px; }
+        .search-pill { display: flex; align-items: center; gap: 10px; background: rgba(15, 23, 42, 0.4); border: 1px solid var(--border-color); padding: 8px 16px; border-radius: 12px; color: var(--text-secondary); }
+        .search-pill input { background: none; border: none; padding: 0; font-size: 0.8125rem; color: white; width: 100%; }
+        .search-pill input:focus { outline: none; }
+
         .id-pill { font-family: monospace; font-size: 0.75rem; color: var(--text-secondary); padding: 2px 6px; background: rgba(15, 23, 42, 0.4); border-radius: 4px; }
         .close-btn { width: 32px; height: 32px; border-radius: 8px; background: rgba(255, 255, 255, 0.03); color: var(--text-secondary); }
         .close-btn:hover { background: var(--error); color: white; }

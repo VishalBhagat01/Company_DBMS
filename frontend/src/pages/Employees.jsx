@@ -6,6 +6,7 @@ function Employees() {
   const [departments, setDepartments] = useState([]);
   const [loading, setLoading] = useState(true);
   const [showForm, setShowForm] = useState(false);
+  const [searchTerm, setSearchTerm] = useState('');
   const [formData, setFormData] = useState({ 
     name: '', address: '', designation: '', contact: '', department_id: '', salary: '' 
   });
@@ -75,6 +76,13 @@ function Employees() {
     }
   };
 
+  const filteredEmployees = employees.filter(emp => 
+    emp.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    (emp.designation && emp.designation.toLowerCase().includes(searchTerm.toLowerCase())) ||
+    (emp.department_name && emp.department_name.toLowerCase().includes(searchTerm.toLowerCase())) ||
+    emp.employee_id.toString().includes(searchTerm)
+  );
+
   return (
     <div className="animate-fade-in">
       <div className="page-header">
@@ -137,7 +145,12 @@ function Employees() {
         <div className="table-controls">
           <div className="search-pill">
             <Search size={16} />
-            <input type="text" placeholder="Search by name..." />
+            <input 
+               type="text" 
+               placeholder="Search by name, role or ID..." 
+               value={searchTerm}
+               onChange={(e) => setSearchTerm(e.target.value)}
+            />
           </div>
           <div className="filter-pill">
             <Filter size={16} />
@@ -158,7 +171,7 @@ function Employees() {
               </tr>
             </thead>
             <tbody>
-              {employees.map(emp => (
+              {filteredEmployees.map(emp => (
                 <tr key={emp.employee_id}>
                   <td><span className="id-pill">#{emp.employee_id}</span></td>
                   <td>
@@ -195,8 +208,8 @@ function Employees() {
         
         .table-controls { display: flex; gap: 16px; margin-bottom: 24px; }
         .search-pill, .filter-pill { display: flex; align-items: center; gap: 10px; background: rgba(15, 23, 42, 0.4); border: 1px solid var(--border-color); padding: 8px 16px; border-radius: 12px; color: var(--text-secondary); }
-        .search-pill input { background: none; border: none; padding: 0; font-size: 0.8125rem; }
-        .search-pill input:focus { box-shadow: none; }
+        .search-pill input { background: none; border: none; padding: 0; font-size: 0.8125rem; color: white; width: 100%; }
+        .search-pill input:focus { outline: none; }
         
         .avatar-info { display: flex; align-items: center; gap: 12px; }
         .avatar-small { width: 32px; height: 32px; background: linear-gradient(135deg, #1e293b, #0f172a); border: 1px solid var(--border-color); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 0.75rem; font-weight: 800; color: var(--accent-color); }

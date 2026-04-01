@@ -5,6 +5,7 @@ function Materials() {
   const [materials, setMaterials] = useState([]);
   const [loading, setLoading] = useState(true);
   const [showForm, setShowForm] = useState(false);
+  const [searchTerm, setSearchTerm] = useState('');
   const [formData, setFormData] = useState({ name: '', quantity: '', price: '' });
   const [editingId, setEditingId] = useState(null);
 
@@ -57,6 +58,11 @@ function Materials() {
     }
   };
 
+  const filteredMaterials = materials.filter(mat => 
+    mat.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    mat.material_id.toString().includes(searchTerm)
+  );
+
   return (
     <div className="animate-fade-in">
       <div className="page-header">
@@ -104,7 +110,12 @@ function Materials() {
         <div className="table-controls">
           <div className="search-pill">
             <Search size={16} />
-            <input type="text" placeholder="Search materials..." />
+            <input 
+              type="text" 
+              placeholder="Search materials by name or ID..." 
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+            />
           </div>
         </div>
 
@@ -121,7 +132,7 @@ function Materials() {
               </tr>
             </thead>
             <tbody>
-              {materials.map(mat => (
+              {filteredMaterials.map(mat => (
                 <tr key={mat.material_id}>
                   <td><span className="id-pill">#{mat.material_id}</span></td>
                   <td>
@@ -166,6 +177,11 @@ function Materials() {
         .stock-label { font-size: 0.625rem; text-transform: uppercase; font-weight: 700; color: var(--text-secondary); }
         .font-mono { font-family: 'JetBrains Mono', monospace; }
         
+        .table-controls { display: flex; gap: 16px; margin-bottom: 24px; }
+        .search-pill { display: flex; align-items: center; gap: 10px; background: rgba(15, 23, 42, 0.4); border: 1px solid var(--border-color); padding: 8px 16px; border-radius: 12px; color: var(--text-secondary); }
+        .search-pill input { background: none; border: none; padding: 0; font-size: 0.8125rem; color: white; width: 100%; }
+        .search-pill input:focus { outline: none; }
+
         .id-pill { font-family: monospace; font-size: 0.75rem; color: var(--text-secondary); padding: 2px 6px; background: rgba(15, 23, 42, 0.4); border-radius: 4px; }
         .close-btn { width: 32px; height: 32px; border-radius: 8px; background: rgba(255, 255, 255, 0.03); color: var(--text-secondary); }
         .close-btn:hover { background: var(--error); color: white; }

@@ -1,10 +1,11 @@
 import { useState, useEffect } from 'react';
-import { Plus, Trash2, Edit2, X, Check, Building2, Phone } from 'lucide-react';
+import { Plus, Trash2, Edit2, X, Check, Building2, Phone, Search } from 'lucide-react';
 
 function Departments() {
   const [departments, setDepartments] = useState([]);
   const [loading, setLoading] = useState(true);
   const [showForm, setShowForm] = useState(false);
+  const [searchTerm, setSearchTerm] = useState('');
   const [formData, setFormData] = useState({ name: '', contact: '', head_of_dept: '' });
   const [editingId, setEditingId] = useState(null);
 
@@ -57,6 +58,12 @@ function Departments() {
     }
   };
 
+  const filteredDepartments = departments.filter(d => 
+    d.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    (d.head_of_dept && d.head_of_dept.toLowerCase().includes(searchTerm.toLowerCase())) ||
+    d.department_id.toString().includes(searchTerm)
+  );
+
   return (
     <div className="animate-fade-in">
       <div className="page-header">
@@ -104,6 +111,18 @@ function Departments() {
       )}
 
       <div className="glass section-card table-container">
+        <div className="table-controls">
+          <div className="search-pill">
+            <Search size={16} />
+            <input 
+              type="text" 
+              placeholder="Search by name or manager..." 
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+            />
+          </div>
+        </div>
+
         {loading ? (
           <div className="loading text-center py-6">Retrieving structure...</div>
         ) : (
@@ -118,7 +137,7 @@ function Departments() {
               </tr>
             </thead>
             <tbody>
-              {departments.map(dept => (
+              {filteredDepartments.map(dept => (
                 <tr key={dept.department_id}>
                   <td><span className="id-pill">#{dept.department_id}</span></td>
                   <td>
@@ -158,6 +177,11 @@ function Departments() {
         .input-with-icon { position: relative; width: 100%; }
         .input-icon { position: absolute; left: 14px; top: 50%; transform: translateY(-50%); color: var(--text-secondary); opacity: 0.5; }
         .input-with-icon input { padding-left: 40px; }
+
+        .table-controls { display: flex; gap: 16px; margin-bottom: 24px; }
+        .search-pill { display: flex; align-items: center; gap: 10px; background: rgba(15, 23, 42, 0.4); border: 1px solid var(--border-color); padding: 8px 16px; border-radius: 12px; color: var(--text-secondary); }
+        .search-pill input { background: none; border: none; padding: 0; font-size: 0.8125rem; color: white; width: 100%; }
+        .search-pill input:focus { outline: none; }
 
         .id-pill { font-family: monospace; font-size: 0.75rem; color: var(--text-secondary); padding: 2px 6px; background: rgba(15, 23, 42, 0.4); border-radius: 4px; }
         .close-btn { width: 32px; height: 32px; border-radius: 8px; background: rgba(255, 255, 255, 0.03); color: var(--text-secondary); }

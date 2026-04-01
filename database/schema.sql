@@ -35,7 +35,7 @@ CREATE TABLE raw_materials (
     price DECIMAL(12, 2)
 );
 
--- 5. Customers Table
+-- 5. Customers Table ..
 CREATE TABLE customers (
     customer_id SERIAL PRIMARY KEY,
     name VARCHAR(255) NOT NULL,

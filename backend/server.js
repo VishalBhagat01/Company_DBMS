@@ -9,22 +9,44 @@ const PORT = process.env.PORT || 5000;
 app.use(cors());
 app.use(express.json());
 
-// --- Dashboard ---
+// --- Dashboard -----
 app.get('/api/dashboard/stats', async (req, res) => {
   try {
-    const employeeCount = await db.query('SELECT COUNT(*) FROM employees');
-    const productCount = await db.query('SELECT COUNT(*) FROM products');
-    const pendingDefects = await db.query("SELECT COUNT(*) FROM defects WHERE status = 'pending'");
+    const [
+      empCount, 
+      prodCount, 
+      defCount, 
+      pendingDef, 
+      deptCount, 
+      matCount, 
+      custCount, 
+      supCount
+    ] = await Promise.all([
+      db.query('SELECT COUNT(*) FROM employees'),
+      db.query('SELECT COUNT(*) FROM products'),
+      db.query('SELECT COUNT(*) FROM defects'),
+      db.query("SELECT COUNT(*) FROM defects WHERE status = 'pending'"),
+      db.query('SELECT COUNT(*) FROM departments'),
+      db.query('SELECT COUNT(*) FROM raw_materials'),
+      db.query('SELECT COUNT(*) FROM customers'),
+      db.query('SELECT COUNT(*) FROM suppliers')
+    ]);
     
     res.json({
-      totalEmployees: parseInt(employeeCount.rows[0].count),
-      totalProducts: parseInt(productCount.rows[0].count),
-      pendingDefects: parseInt(pendingDefects.rows[0].count)
+      totalEmployees: parseInt(empCount.rows[0].count),
+      totalProducts: parseInt(prodCount.rows[0].count),
+      totalDefects: parseInt(defCount.rows[0].count),
+      pendingDefects: parseInt(pendingDef.rows[0].count),
+      totalDepartments: parseInt(deptCount.rows[0].count),
+      totalMaterials: parseInt(matCount.rows[0].count),
+      totalCustomers: parseInt(custCount.rows[0].count),
+      totalSuppliers: parseInt(supCount.rows[0].count)
     });
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
 });
+
 
 // --- Departments ---
 app.get('/api/departments', async (req, res) => {

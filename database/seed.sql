@@ -32,7 +32,7 @@ INSERT INTO raw_materials (name, quantity, price) VALUES
 ('Plastic Casing', 2000, 5.00),
 ('Aluminum Frame', 400, 10.00);
 
--- 5. Customers
+-- 5. Customers ..
 INSERT INTO customers (name, address, contact) VALUES
 ('John Smith', '789 Broadway, New York, NY', '555-2001'),
 ('Mary Johnson', '321 Sunset Blvd, Los Angeles, CA', '555-2002'),

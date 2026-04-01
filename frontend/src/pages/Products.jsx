@@ -5,6 +5,7 @@ function Products() {
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [showForm, setShowForm] = useState(false);
+  const [searchTerm, setSearchTerm] = useState('');
   const [formData, setFormData] = useState({ product_type: '', price: '', mfd_date: '' });
   const [viewDefectsId, setViewDefectsId] = useState(null);
   const [defects, setDefects] = useState([]);
@@ -74,6 +75,11 @@ function Products() {
       body: JSON.stringify({ material_id: assignData.material_id, quantity_used: assignData.quantity_used })
     }).then(() => setShowAddMat(false));
   };
+
+  const filteredProducts = products.filter(p => 
+    p.product_type.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    p.product_id.toString().includes(searchTerm)
+  );
 
   return (
     <div className="animate-fade-in">
@@ -201,7 +207,12 @@ function Products() {
         <div className="table-controls">
           <div className="search-pill">
             <Search size={16} />
-            <input type="text" placeholder="Filter by product name..." />
+            <input 
+              type="text" 
+              placeholder="Filter by product name or ID..." 
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+            />
           </div>
           <div className="filter-pill">
              <BarChart3 size={16} />
@@ -221,7 +232,7 @@ function Products() {
               </tr>
             </thead>
             <tbody>
-              {products.map(p => (
+              {filteredProducts.map(p => (
                 <tr key={p.product_id}>
                   <td><span className="id-pill">#{p.product_id}</span></td>
                   <td><span className="font-bold">{p.product_type}</span></td>
@@ -261,6 +272,7 @@ function Products() {
         .table-controls { display: flex; gap: 16px; margin-bottom: 24px; }
         .search-pill, .filter-pill { display: flex; align-items: center; gap: 10px; background: rgba(15, 23, 42, 0.4); border: 1px solid var(--border-color); padding: 8px 16px; border-radius: 12px; color: var(--text-secondary); }
         .search-pill input { background: none; border: none; padding: 0; font-size: 0.8125rem; color: white; width: 100%; }
+        .search-pill input:focus { outline: none; }
         
         .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.7); display: flex; align-items: center; justify-content: center; z-index: 1000; backdrop-filter: blur(4px); }
         .modal-content { width: 440px; padding: 32px; border-radius: 20px; box-shadow: 0 25px 50px -12px rgba(0,0,0,0.5); }

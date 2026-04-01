@@ -110,6 +110,12 @@ input:focus, select:focus, textarea:focus {
   box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.1);
 }
 
+select option {
+  background: #0f172a; /* Solid dark background for dropdown items */
+  color: var(--text-primary);
+  padding: 12px;
+}
+
 table {
   width: 100%;
   border-collapse: collapse;
