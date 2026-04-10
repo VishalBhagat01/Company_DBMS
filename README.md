@@ -1,6 +1,6 @@
-# Company Management System - College Project
+# Synapse ERP - Enterprise Operations Suite
 
-A professional-grade Company Management System built with a Node.js backend and a high-performance React frontend.
+A professional-grade operations and management suite built with a Node.js backend and a high-performance React frontend.
 
 ## Features
 - **Dashboard**: Real-time stats for employees, products, and defects.

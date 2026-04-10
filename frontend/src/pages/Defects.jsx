@@ -74,15 +74,6 @@ function Defects() {
           <p className="page-subtitle">Inventory defect tracking and resolution hub</p>
         </div>
         <div className="header-actions">
-          <div className="filter-pill-large">
-            <Filter size={18} />
-            <select value={filterStatus} onChange={e => setFilterStatus(e.target.value)}>
-              <option value="">All Scopes</option>
-              <option value="pending">Pending</option>
-              <option value="resolved">Resolved</option>
-              <option value="cancelled">Cancelled</option>
-            </select>
-          </div>
           <button className="primary add-btn" onClick={() => setShowForm(true)}>
             <Plus size={18} />
             <span>Report Defect</span>
@@ -146,6 +137,19 @@ function Defects() {
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
             />
+          </div>
+          <div className="filter-pill" style={{ padding: '0 12px' }}>
+            <Filter size={16} />
+            <select 
+              value={filterStatus} 
+              onChange={e => setFilterStatus(e.target.value)}
+              style={{ background: 'transparent', border: 'none', color: 'white', outline: 'none', cursor: 'pointer', padding: '8px 4px', fontSize: '0.8125rem' }}
+            >
+              <option value="" style={{ background: '#0f172a' }}>All Scopes</option>
+              <option value="pending" style={{ background: '#0f172a' }}>Pending</option>
+              <option value="resolved" style={{ background: '#0f172a' }}>Resolved</option>
+              <option value="cancelled" style={{ background: '#0f172a' }}>Cancelled</option>
+            </select>
           </div>
         </div>
 
@@ -232,7 +236,7 @@ function Defects() {
         .input-with-icon select { padding-left: 44px; }
 
         .table-controls { display: flex; gap: 16px; margin-bottom: 24px; }
-        .search-pill { display: flex; align-items: center; gap: 10px; background: rgba(15, 23, 42, 0.4); border: 1px solid var(--border-color); padding: 8px 16px; border-radius: 12px; color: var(--text-secondary); }
+        .search-pill, .filter-pill { display: flex; align-items: center; gap: 10px; background: rgba(15, 23, 42, 0.4); border: 1px solid var(--border-color); padding: 8px 16px; border-radius: 12px; color: var(--text-secondary); }
         .search-pill input { background: none; border: none; padding: 0; font-size: 0.8125rem; color: white; width: 100%; }
         .search-pill input:focus { outline: none; }
 

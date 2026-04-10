@@ -46,10 +46,10 @@ function App() {
     <div className="layout">
       <aside className="sidebar glass">
         <div className="sidebar-header">
-          <div className="logo-icon">C</div>
+          <div className="logo-icon">S</div>
           <div className="brand-info">
-            <h1>CMS PRO</h1>
-            <span className="brand-tag">v1.0.2</span>
+            <h1>SYNAPSE</h1>
+            <span className="brand-tag">ERP SYSTEM</span>
           </div>
         </div>
         

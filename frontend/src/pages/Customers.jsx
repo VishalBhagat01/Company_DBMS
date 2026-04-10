@@ -1,11 +1,12 @@
 import { useState, useEffect } from 'react';
-import { Plus, Trash2, Edit2, X, Check, Search, UserCircle, MapPin, Phone } from 'lucide-react';
+import { Plus, Trash2, Edit2, X, Check, Search, UserCircle, MapPin, Phone, Filter } from 'lucide-react';
 
 function Customers() {
   const [customers, setCustomers] = useState([]);
   const [loading, setLoading] = useState(true);
   const [showForm, setShowForm] = useState(false);
   const [searchTerm, setSearchTerm] = useState('');
+  const [filterLocation, setFilterLocation] = useState('');
   const [formData, setFormData] = useState({ name: '', address: '', contact: '' });
   const [editingId, setEditingId] = useState(null);
 
@@ -58,10 +59,13 @@ function Customers() {
     }
   };
 
+  const uniqueLocations = [...new Set(customers.map(c => c.address).filter(Boolean))];
+
   const filteredCustomers = customers.filter(cust => 
-    cust.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    (filterLocation === '' || cust.address === filterLocation) &&
+    (cust.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
     (cust.address && cust.address.toLowerCase().includes(searchTerm.toLowerCase())) ||
-    cust.customer_id.toString().includes(searchTerm)
+    cust.customer_id.toString().includes(searchTerm))
   );
 
   return (
@@ -127,6 +131,19 @@ function Customers() {
               onChange={(e) => setSearchTerm(e.target.value)}
             />
           </div>
+          <div className="filter-pill" style={{ padding: '0 12px' }}>
+            <Filter size={16} />
+            <select 
+              value={filterLocation} 
+              onChange={(e) => setFilterLocation(e.target.value)}
+              style={{ background: 'transparent', border: 'none', color: 'white', outline: 'none', cursor: 'pointer', padding: '8px 4px', fontSize: '0.8125rem' }}
+            >
+              <option value="" style={{ background: '#0f172a' }}>All Locations</option>
+              {uniqueLocations.map((loc, idx) => (
+                <option key={idx} value={loc} style={{ background: '#0f172a' }}>{loc}</option>
+              ))}
+            </select>
+          </div>
         </div>
 
         {loading ? <div className="loading">Syncing CRM...</div> : (
@@ -179,7 +196,7 @@ function Customers() {
         .input-with-icon input { padding-left: 40px; }
         
         .table-controls { display: flex; gap: 16px; margin-bottom: 24px; }
-        .search-pill { display: flex; align-items: center; gap: 10px; background: rgba(15, 23, 42, 0.4); border: 1px solid var(--border-color); padding: 8px 16px; border-radius: 12px; color: var(--text-secondary); }
+        .search-pill, .filter-pill { display: flex; align-items: center; gap: 10px; background: rgba(15, 23, 42, 0.4); border: 1px solid var(--border-color); padding: 8px 16px; border-radius: 12px; color: var(--text-secondary); }
         .search-pill input { background: none; border: none; padding: 0; font-size: 0.8125rem; color: white; width: 100%; }
         .search-pill input:focus { outline: none; }
 

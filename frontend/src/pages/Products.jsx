@@ -1,11 +1,12 @@
 import { useState, useEffect } from 'react';
-import { Plus, Check, Eye, X, Users, Layers, Search, BarChart3 } from 'lucide-react';
+import { Plus, Check, Eye, X, Users, Layers, Search, BarChart3, Filter } from 'lucide-react';
 
 function Products() {
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [showForm, setShowForm] = useState(false);
   const [searchTerm, setSearchTerm] = useState('');
+  const [filterYear, setFilterYear] = useState('');
   const [formData, setFormData] = useState({ product_type: '', price: '', mfd_date: '' });
   const [viewDefectsId, setViewDefectsId] = useState(null);
   const [defects, setDefects] = useState([]);
@@ -76,9 +77,12 @@ function Products() {
     }).then(() => setShowAddMat(false));
   };
 
+  const uniqueYears = [...new Set(products.map(p => new Date(p.mfd_date).getFullYear().toString()).filter(Boolean))];
+
   const filteredProducts = products.filter(p => 
-    p.product_type.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    p.product_id.toString().includes(searchTerm)
+    (filterYear === '' || new Date(p.mfd_date).getFullYear().toString() === filterYear) &&
+    (p.product_type.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    p.product_id.toString().includes(searchTerm))
   );
 
   return (
@@ -214,9 +218,18 @@ function Products() {
               onChange={(e) => setSearchTerm(e.target.value)}
             />
           </div>
-          <div className="filter-pill">
-             <BarChart3 size={16} />
-             <span>Analytics</span>
+          <div className="filter-pill" style={{ padding: '0 12px' }}>
+            <Filter size={16} />
+            <select 
+              value={filterYear} 
+              onChange={(e) => setFilterYear(e.target.value)}
+              style={{ background: 'transparent', border: 'none', color: 'white', outline: 'none', cursor: 'pointer', padding: '8px 4px', fontSize: '0.8125rem' }}
+            >
+              <option value="" style={{ background: '#0f172a' }}>All Years</option>
+              {uniqueYears.map((year, idx) => (
+                <option key={idx} value={year} style={{ background: '#0f172a' }}>{year}</option>
+              ))}
+            </select>
           </div>
         </div>
 

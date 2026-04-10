@@ -147,52 +147,80 @@ function Dashboard() {
                   title="Departments" 
                   color="#3b82f6" 
                   icon={Building2}
-                  fields={['dept_id (PK)', 'name', 'contact']} 
+                  fields={['dept_id (PK)', 'name', 'head_of_dept']} 
                 />
                 <div className="connector-h"><div className="line"></div><div className="label">1:M</div></div>
                 <SchemaNode 
                   title="Employees" 
                   color="#10b981" 
                   icon={Users}
-                  fields={['emp_id (PK)', 'name', 'dept_id (FK)', 'salary']} 
+                  fields={['emp_id (PK)', 'name', 'dept_id (FK)']} 
+                />
+                <div className="connector-h"><div className="line"></div><div className="label">1:M</div></div>
+                <SchemaNode 
+                  title="Emp_Product" 
+                  color="#6366f1" 
+                  icon={GitBranch}
+                  fields={['emp_id (PFK)', 'prod_id (PFK)']} 
                 />
               </div>
 
               {/* Transition 1 */}
               <div className="er-row-connector">
-                <div className="line-v"></div>
+                <div className="line-v centered"></div>
                 <div className="line-v right"></div>
               </div>
 
               {/* Row 2 */}
               <div className="er-row">
                 <SchemaNode 
+                  title="Customers" 
+                  color="#ec4899" 
+                  icon={UserCircle}
+                  fields={['cust_id (PK)', 'name', 'address']} 
+                />
+                <div className="connector-h" style={{ opacity: 0 }}></div>
+                <SchemaNode 
                   title="Defects" 
                   color="#ef4444" 
                   icon={AlertCircle}
-                  fields={['defect_id (PK)', 'product_id (FK)', 'handled_by (FK)']} 
+                  fields={['defect_id (PK)', 'prod_id (FK)', 'handled_by (FK)']} 
                 />
                 <div className="connector-h"><div className="line"></div><div className="label">M:1</div></div>
                 <SchemaNode 
                   title="Products" 
                   color="#f59e0b" 
                   icon={Package}
-                  fields={['product_id (PK)', 'product_type', 'price']} 
+                  fields={['prod_id (PK)', 'type', 'mfd_date']} 
                 />
               </div>
 
               {/* Transition 2 */}
               <div className="er-row-connector">
-                <div className="line-v centered"></div>
+                <div className="line-v right"></div>
               </div>
 
               {/* Row 3 */}
-              <div className="er-row centered">
+              <div className="er-row">
+                <SchemaNode 
+                  title="Suppliers" 
+                  color="#8b5cf6" 
+                  icon={Truck}
+                  fields={['sup_id (PK)', 'name', 'address']} 
+                />
+                <div className="connector-h" style={{ opacity: 0 }}></div>
                 <SchemaNode 
                   title="Raw Materials" 
-                  color="#8b5cf6" 
+                  color="#14b8a6" 
                   icon={Layers}
-                  fields={['mat_id (PK)', 'name', 'quantity', 'price']} 
+                  fields={['mat_id (PK)', 'name', 'quantity']} 
+                />
+                <div className="connector-h"><div className="line"></div><div className="label">1:M</div></div>
+                <SchemaNode 
+                  title="Prod_Material" 
+                  color="#0ea5e9" 
+                  icon={GitBranch}
+                  fields={['prod_id (PFK)', 'mat_id (PFK)', 'qty']} 
                 />
               </div>
             </div>
@@ -276,7 +304,7 @@ function Dashboard() {
         .er-row { display: flex; align-items: center; justify-content: center; width: 100%; }
         .er-row.centered { justify-content: center; }
         
-        .schema-node { padding: 16px; border-radius: 14px; width: 200px; border: 1px solid var(--border-color); background: rgba(15, 23, 42, 0.4); backdrop-filter: blur(8px); }
+        .schema-node { padding: 14px; border-radius: 14px; width: 180px; border: 1px solid var(--border-color); background: rgba(15, 23, 42, 0.4); backdrop-filter: blur(8px); }
         .node-header { display: flex; align-items: center; gap: 10px; margin-bottom: 12px; font-weight: 800; font-size: 0.8125rem; }
         .node-fields { display: flex; flex-direction: column; gap: 6px; }
         .node-field { display: flex; align-items: center; gap: 8px; font-size: 0.6875rem; color: var(--text-secondary); font-family: 'JetBrains Mono', monospace; }
@@ -287,8 +315,8 @@ function Dashboard() {
         .connector-h .label { font-size: 9px; font-weight: 800; color: var(--text-secondary); background: #0f172a; padding: 2px 6px; border-radius: 4px; border: 1px solid var(--border-color); position: absolute; top: -10px; }
 
         .er-row-connector { height: 40px; width: 100%; position: relative; }
-        .line-v { width: 1px; height: 100%; background: rgba(255,255,255,0.1); position: absolute; left: calc(50% - 140px); }
-        .line-v.right { left: calc(50% + 140px); }
+        .line-v { width: 1px; height: 100%; background: rgba(255,255,255,0.1); position: absolute; left: calc(50% - 260px); }
+        .line-v.right { left: calc(50% + 260px); }
         .line-v.centered { left: 50%; }
 
         .tech-items { display: flex; flex-direction: column; gap: 20px; margin-top: 24px; }

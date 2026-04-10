@@ -7,6 +7,7 @@ function Employees() {
   const [loading, setLoading] = useState(true);
   const [showForm, setShowForm] = useState(false);
   const [searchTerm, setSearchTerm] = useState('');
+  const [filterDepartment, setFilterDepartment] = useState('');
   const [formData, setFormData] = useState({ 
     name: '', address: '', designation: '', contact: '', department_id: '', salary: '' 
   });
@@ -77,10 +78,11 @@ function Employees() {
   };
 
   const filteredEmployees = employees.filter(emp => 
-    emp.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    (filterDepartment === '' || emp.department_name === filterDepartment) &&
+    (emp.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
     (emp.designation && emp.designation.toLowerCase().includes(searchTerm.toLowerCase())) ||
     (emp.department_name && emp.department_name.toLowerCase().includes(searchTerm.toLowerCase())) ||
-    emp.employee_id.toString().includes(searchTerm)
+    emp.employee_id.toString().includes(searchTerm))
   );
 
   return (
@@ -152,9 +154,18 @@ function Employees() {
                onChange={(e) => setSearchTerm(e.target.value)}
             />
           </div>
-          <div className="filter-pill">
+          <div className="filter-pill" style={{ padding: '0 12px' }}>
             <Filter size={16} />
-            <span>Filter</span>
+            <select 
+              value={filterDepartment} 
+              onChange={(e) => setFilterDepartment(e.target.value)}
+              style={{ background: 'transparent', border: 'none', color: 'white', outline: 'none', cursor: 'pointer', padding: '8px 4px', fontSize: '0.8125rem' }}
+            >
+              <option value="" style={{ background: '#0f172a' }}>All Departments</option>
+              {departments.map(d => (
+                <option key={d.department_id} value={d.name} style={{ background: '#0f172a' }}>{d.name}</option>
+              ))}
+            </select>
           </div>
         </div>
         
