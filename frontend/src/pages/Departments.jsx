@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Plus, Trash2, Edit2, X, Check, Building2, Phone, Search, Filter } from 'lucide-react';
+import { apiUrl } from '../lib/api';
 
 function Departments() {
   const [departments, setDepartments] = useState([]);
@@ -12,7 +13,7 @@ function Departments() {
 
   const fetchDepartments = () => {
     setLoading(true);
-    fetch('http://localhost:5000/api/departments')
+    fetch(apiUrl('departments'))
       .then(res => res.json())
       .then(data => {
         setDepartments(data);
@@ -26,8 +27,8 @@ function Departments() {
     e.preventDefault();
     const method = editingId ? 'PUT' : 'POST';
     const url = editingId 
-      ? `http://localhost:5000/api/departments/${editingId}`
-      : 'http://localhost:5000/api/departments';
+      ? apiUrl(`departments/${editingId}`)
+      : apiUrl('departments');
 
     fetch(url, {
       method,
@@ -54,7 +55,7 @@ function Departments() {
 
   const handleDelete = (id) => {
     if (window.confirm('Remove this department? This may affect assigned employees.')) {
-      fetch(`http://localhost:5000/api/departments/${id}`, { method: 'DELETE' })
+      fetch(apiUrl(`departments/${id}`), { method: 'DELETE' })
         .then(() => fetchDepartments());
     }
   };

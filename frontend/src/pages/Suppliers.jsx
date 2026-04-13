@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Plus, Trash2, Edit2, X, Check, Search, Truck, Globe, Phone, Filter } from 'lucide-react';
+import { apiUrl } from '../lib/api';
 
 function Suppliers() {
   const [suppliers, setSuppliers] = useState([]);
@@ -12,7 +13,7 @@ function Suppliers() {
 
   const fetchSuppliers = () => {
     setLoading(true);
-    fetch('http://localhost:5000/api/suppliers')
+    fetch(apiUrl('suppliers'))
       .then(res => res.json())
       .then(data => {
         setSuppliers(data);
@@ -26,8 +27,8 @@ function Suppliers() {
     e.preventDefault();
     const method = editingId ? 'PUT' : 'POST';
     const url = editingId 
-      ? `http://localhost:5000/api/suppliers/${editingId}`
-      : 'http://localhost:5000/api/suppliers';
+      ? apiUrl(`suppliers/${editingId}`)
+      : apiUrl('suppliers');
 
     fetch(url, {
       method,
@@ -54,7 +55,7 @@ function Suppliers() {
 
   const handleDelete = (id) => {
     if (window.confirm('Terminate vendor contract?')) {
-      fetch(`http://localhost:5000/api/suppliers/${id}`, { method: 'DELETE' })
+      fetch(apiUrl(`suppliers/${id}`), { method: 'DELETE' })
         .then(() => fetchSuppliers());
     }
   };

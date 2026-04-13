@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Plus, Trash2, Edit2, X, Check, Search, UserCircle, MapPin, Phone, Filter } from 'lucide-react';
+import { apiUrl } from '../lib/api';
 
 function Customers() {
   const [customers, setCustomers] = useState([]);
@@ -12,7 +13,7 @@ function Customers() {
 
   const fetchCustomers = () => {
     setLoading(true);
-    fetch('http://localhost:5000/api/customers')
+    fetch(apiUrl('customers'))
       .then(res => res.json())
       .then(data => {
         setCustomers(data);
@@ -26,8 +27,8 @@ function Customers() {
     e.preventDefault();
     const method = editingId ? 'PUT' : 'POST';
     const url = editingId 
-      ? `http://localhost:5000/api/customers/${editingId}`
-      : 'http://localhost:5000/api/customers';
+      ? apiUrl(`customers/${editingId}`)
+      : apiUrl('customers');
 
     fetch(url, {
       method,
@@ -54,7 +55,7 @@ function Customers() {
 
   const handleDelete = (id) => {
     if (window.confirm('Remove customer from CRM?')) {
-      fetch(`http://localhost:5000/api/customers/${id}`, { method: 'DELETE' })
+      fetch(apiUrl(`customers/${id}`), { method: 'DELETE' })
         .then(() => fetchCustomers());
     }
   };

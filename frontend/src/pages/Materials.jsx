@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Plus, Trash2, Edit2, X, Check, Search, Package, Filter } from 'lucide-react';
+import { apiUrl } from '../lib/api';
 
 function Materials() {
   const [materials, setMaterials] = useState([]);
@@ -12,7 +13,7 @@ function Materials() {
 
   const fetchMaterials = () => {
     setLoading(true);
-    fetch('http://localhost:5000/api/materials')
+    fetch(apiUrl('materials'))
       .then(res => res.json())
       .then(data => {
         setMaterials(data);
@@ -26,8 +27,8 @@ function Materials() {
     e.preventDefault();
     const method = editingId ? 'PUT' : 'POST';
     const url = editingId 
-      ? `http://localhost:5000/api/materials/${editingId}`
-      : 'http://localhost:5000/api/materials';
+      ? apiUrl(`materials/${editingId}`)
+      : apiUrl('materials');
 
     fetch(url, {
       method,
@@ -54,7 +55,7 @@ function Materials() {
 
   const handleDelete = (id) => {
     if (window.confirm('Delete this material record?')) {
-      fetch(`http://localhost:5000/api/materials/${id}`, { method: 'DELETE' })
+      fetch(apiUrl(`materials/${id}`), { method: 'DELETE' })
         .then(() => fetchMaterials());
     }
   };

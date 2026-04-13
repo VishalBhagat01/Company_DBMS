@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Plus, Trash2, Edit2, X, Check, Search, Filter } from 'lucide-react';
+import { apiUrl } from '../lib/api';
 
 function Employees() {
   const [employees, setEmployees] = useState([]);
@@ -17,8 +18,8 @@ function Employees() {
     setLoading(true);
     try {
       const [empRes, deptRes] = await Promise.all([
-        fetch('http://localhost:5000/api/employees'),
-        fetch('http://localhost:5000/api/departments')
+        fetch(apiUrl('employees')),
+        fetch(apiUrl('departments'))
       ]);
       const empData = await empRes.json();
       const deptData = await deptRes.json();
@@ -37,8 +38,8 @@ function Employees() {
     e.preventDefault();
     const method = editingId ? 'PUT' : 'POST';
     const url = editingId 
-      ? `http://localhost:5000/api/employees/${editingId}`
-      : 'http://localhost:5000/api/employees';
+      ? apiUrl(`employees/${editingId}`)
+      : apiUrl('employees');
 
     fetch(url, {
       method,
@@ -72,7 +73,7 @@ function Employees() {
 
   const handleDelete = (id) => {
     if (window.confirm('Delete this employee record?')) {
-      fetch(`http://localhost:5000/api/employees/${id}`, { method: 'DELETE' })
+      fetch(apiUrl(`employees/${id}`), { method: 'DELETE' })
         .then(() => fetchData());
     }
   };

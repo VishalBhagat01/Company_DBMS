@@ -16,6 +16,7 @@ import {
   Truck,
   UserCircle
 } from 'lucide-react';
+import { apiUrl } from '../lib/api';
 
 const StatCard = ({ title, value, icon: Icon, color, percent }) => (
   <div className="stat-card-premium glass">
@@ -73,7 +74,7 @@ function Dashboard() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    fetch('http://localhost:5000/api/dashboard/stats')
+    fetch(apiUrl('dashboard/stats'))
       .then(res => res.json())
       .then(data => {
         setStats(data);

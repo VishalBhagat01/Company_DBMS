@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Plus, Check, X, Filter, AlertTriangle, User, Package, Search } from 'lucide-react';
+import { apiUrl } from '../lib/api';
 
 function Defects() {
   const [defects, setDefects] = useState([]);
@@ -17,13 +18,13 @@ function Defects() {
     setLoading(true);
     try {
       const url = filterStatus 
-        ? `http://localhost:5000/api/defects?status=${filterStatus}`
-        : 'http://localhost:5000/api/defects';
+        ? apiUrl(`defects?status=${filterStatus}`)
+        : apiUrl('defects');
       
       const [defRes, prodRes, empRes] = await Promise.all([
         fetch(url),
-        fetch('http://localhost:5000/api/products'),
-        fetch('http://localhost:5000/api/employees')
+        fetch(apiUrl('products')),
+        fetch(apiUrl('employees'))
       ]);
       setDefects(await defRes.json());
       setProducts(await prodRes.json());
@@ -39,7 +40,7 @@ function Defects() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    fetch('http://localhost:5000/api/defects', {
+    fetch(apiUrl('defects'), {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(formData)
@@ -52,7 +53,7 @@ function Defects() {
   };
 
   const handleUpdateStatus = (id, status, empId) => {
-    fetch(`http://localhost:5000/api/defects/${id}`, {
+    fetch(apiUrl(`defects/${id}`), {
       method: 'PUT',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ status, handled_by_employee_id: empId })

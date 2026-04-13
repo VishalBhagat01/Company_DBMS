@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Plus, Check, Eye, X, Users, Layers, Search, BarChart3, Filter } from 'lucide-react';
+import { apiUrl } from '../lib/api';
 
 function Products() {
   const [products, setProducts] = useState([]);
@@ -20,7 +21,7 @@ function Products() {
 
   const fetchProducts = () => {
     setLoading(true);
-    fetch('http://localhost:5000/api/products')
+    fetch(apiUrl('products'))
       .then(res => res.json())
       .then(data => {
         setProducts(data);
@@ -29,15 +30,15 @@ function Products() {
   };
 
   const fetchDefects = (id) => {
-    fetch(`http://localhost:5000/api/products/${id}/defects`)
+    fetch(apiUrl(`products/${id}/defects`))
       .then(res => res.json())
       .then(data => setDefects(data));
   };
 
   const fetchAssignmentData = async () => {
     const [empRes, matRes] = await Promise.all([
-      fetch('http://localhost:5000/api/employees'),
-      fetch('http://localhost:5000/api/materials')
+      fetch(apiUrl('employees')),
+      fetch(apiUrl('materials'))
     ]);
     setEmployees(await empRes.json());
     setMaterials(await matRes.json());
@@ -47,7 +48,7 @@ function Products() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    fetch('http://localhost:5000/api/products', {
+    fetch(apiUrl('products'), {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(formData)
@@ -61,7 +62,7 @@ function Products() {
 
   const handleAssignEmployee = (e) => {
     e.preventDefault();
-    fetch(`http://localhost:5000/api/products/${selectedProductId}/assign-employee`, {
+    fetch(apiUrl(`products/${selectedProductId}/assign-employee`), {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ employee_id: assignData.employee_id })
@@ -70,7 +71,7 @@ function Products() {
 
   const handleAddMaterial = (e) => {
     e.preventDefault();
-    fetch(`http://localhost:5000/api/products/${selectedProductId}/add-material`, {
+    fetch(apiUrl(`products/${selectedProductId}/add-material`), {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ material_id: assignData.material_id, quantity_used: assignData.quantity_used })
